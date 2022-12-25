@@ -1,4 +1,4 @@
-var url = "https://eonet.sci.gsfc.nasa.gov/api/v3/events",
+var url = "https://eonet.gsfc.nasa.gov/api/v3/events",
     cat_url = "https://eonet.gsfc.nasa.gov/api/v3/categories",
     tornadoIcon = L.icon({
         iconUrl: 'icons/tornado.png',
