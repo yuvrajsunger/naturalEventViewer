@@ -27,6 +27,7 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
 }).addTo(map);
 
+var markers = L.markerClusterGroup();
 
 $.getJSON(url, function (data) {
     $.each(data.events, function (key1, value1) {
@@ -55,24 +56,26 @@ $.getJSON(url, function (data) {
             L.polyline(coordList, { weight: 3, color: 'red' }).addTo(map);
         }
         else if (eventId != "manmade" && eventId != "seaLakeIce" && eventId != "waterColor") {
-            L.geoJSON(value1.geometry, {
-                pointToLayer: function (feature, latlng) {
-                    if (eventId == "wildfires") {
-                        return L.marker(latlng, { icon: forestFireIcon });
+            markers.addLayer(
+                L.geoJSON(value1.geometry, {
+                    pointToLayer: function (feature, latlng) {
+                        if (eventId == "wildfires") {
+                            return L.marker(latlng, { icon: forestFireIcon });
+                        }
+                        else if (eventId == "volcanoes") {
+                            return L.marker(latlng, { icon: volcanoIcon });
+                        }
+                        else {
+                            return L.marker(latlng);
+                        }
                     }
-                    else if (eventId == "volcanoes") {
-                        return L.marker(latlng, { icon: volcanoIcon });
-                    }
-                    else {
-                        return L.marker(latlng);
-                    }
-                }
-            })
-                .bindPopup("Title: " + value1.title + "<br>" + "Date: " + value1.geometry[0].date)
-                .addTo(map);
+                })
+                    .bindPopup("Title: " + value1.title + "<br>" + "Date: " + value1.geometry[0].date))
         }
     })
 });
+
+map.addLayer(markers)
 
 $.getJSON(cat_url, function (data) {
     $.getJSON(url, function (e_data) {
